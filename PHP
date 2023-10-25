@@ -14,10 +14,12 @@ def new_user():
         db.commit()
         cursor.close()
         return redirect(url_for('users'))
-    return render_template('new_user.html')
+        return render_template('new_user.html')
 
-@app.route('/users')
-def users():
+Database retriever 
+
+  @app.route('/users')
+   def users():
     cursor = db.cursor(dictionary=True)
     cursor.execute("SELECT * FROM users")
     user_data = cursor.fetchall()
@@ -26,4 +28,17 @@ def users():
 
 if __name__ == '__main__':
     app.run()
+@app.route('/users/<int:id>')
+def user_details(id):
+    cursor = db.cursor(dictionary=True)
+    cursor.execute("SELECT * FROM users WHERE id = %s", (id,))
+    user = cursor.fetchone()
+    cursor.close()
+    
+    if user:
+        return render_template('user_details.html', user=user)
+    else:
+        return "User not found."
 
+if __name__ == '__main__':
+    app.run()
